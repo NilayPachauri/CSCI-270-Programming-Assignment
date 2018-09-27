@@ -1,11 +1,12 @@
 CXX = g++
 CPPFLAGS = -g -Wall -std=c++11
 FILE = grid.cpp
+EXE = grid
 
-all: clean grid
+all: clean $(EXE)
 
-grid: $(FILE)
+$(EXE): $(FILE)
 	$(CXX) $(CPPFLAGS) $^ -o $@
 
 clean:
-	rm -f $(FILE)
+	rm -f $(EXE)
