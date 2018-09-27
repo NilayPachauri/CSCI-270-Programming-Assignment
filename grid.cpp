@@ -7,6 +7,7 @@
 */
 #include <algorithm>
 #include <iostream>
+#include <limits>
 #include <vector>
 #include <string>
 //	Feel free to include any other C++ standard library if necessary.
@@ -19,13 +20,30 @@ using namespace std;
  * y: the y-coordinate of your location in the vector
  */
 int opt(int x, int y, int N, vector <vector <string> > G)	{
-	
-	if ((x == (N - 1)) && (y == (N - 1))){
-		return G[x][y];
-		// If we've reached the bottom right corner,
-		// simply output it's value
-	} else {
 
+	// Let curr be the current value of the cell
+	int curr = G[x][y];
+
+	// If we've reached the bottom right corner,
+	// simply output it's value
+	if ((x == (N - 1)) && (y == (N - 1))){
+		return curr;
+	} else {
+		// Set the two choices to the min integer so if either doesn't exist
+		// then the other will be automatically bigger
+		int bottom = numeric_limits<int>::min();
+		int right = numeric_limits<int>::min();
+
+		// Update bottom and the right based on the value if they were picked
+		// summed with the optimal value of getting to the current index
+		if (x != (N - 1))
+			bottom = opt(x + 1, y, N, G);
+		if (y != (N - 1))
+			right = opt(x, y + 1, N, G);
+
+		// Return the maximum of the two values for the optimal path
+		// calling index x and y
+		return (curr + max(bottom, right));
 	}
 
 }
