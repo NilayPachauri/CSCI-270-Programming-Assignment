@@ -5,6 +5,7 @@
 	Email  : pachauri@usc.edu
 	USC ID : 3787351614
 */
+#include <algorithm>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -12,6 +13,23 @@
 
 using namespace std;
 //	You can add any custom classes / helper functions here.
+
+/*
+ * x: the x-coordinate of your location in the vector
+ * y: the y-coordinate of your location in the vector
+ */
+int opt(int x, int y, int N, vector <vector <string> > G)	{
+	
+	if ((x == (N - 1)) && (y == (N - 1))){
+		return G[x][y];
+		// If we've reached the bottom right corner,
+		// simply output it's value
+	} else {
+
+	}
+
+}
+
 
 int solve(int N, vector<vector<string> > G) {
 /*
