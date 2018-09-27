@@ -1,9 +1,9 @@
 /*
 	CSCI 270 Fall 2018
 	Programming Assignment
-	Name   :
-	Email  :
-	USC ID :
+	Name   : Nilay Pachauri
+	Email  : pachauri@usc.edu
+	USC ID : 3787351614
 */
 #include <iostream>
 #include <vector>
