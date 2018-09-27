@@ -58,6 +58,7 @@ int solve(int N, vector<vector<string> > G) {
 		G[N-1][N-1] is the bottom right corner
 	Return: the minimum life Brain needs to complete his task.
 */
+	return opt(0, 0, N, G);
 }
 
 //	The main function reads the input and outputs your answer.
