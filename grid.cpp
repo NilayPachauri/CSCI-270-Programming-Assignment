@@ -22,7 +22,7 @@ using namespace std;
 int opt(int x, int y, int N, vector <vector <string> > G)	{
 
 	// Let curr be the current value of the cell
-	int curr = G[x][y];
+	int curr = stoi(G[x][y]);
 
 	// If we've reached the bottom right corner,
 	// simply output it's value
