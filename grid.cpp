@@ -29,10 +29,11 @@ int opt(int x, int y, int N, vector <vector <string> > G)	{
 	if ((x == (N - 1)) && (y == (N - 1))){
 		return curr;
 	} else {
-		// Set the two choices to the min integer so if either doesn't exist
-		// then the other will be automatically bigger
-		int bottom = numeric_limits<int>::min();
-		int right = numeric_limits<int>::min();
+
+		// Initialize the minimum value of Brian's health needed to traverse
+		// from G[x,y] to the end
+		int bottom = 0;
+		int right = 0;
 
 		// Update bottom and the right based on the value if they were picked
 		// summed with the optimal value of getting to the current index
@@ -41,9 +42,16 @@ int opt(int x, int y, int N, vector <vector <string> > G)	{
 		if (y != (N - 1))
 			right = opt(x, y + 1, N, G);
 
-		// Return the maximum of the two values for the optimal path
+		// Check to make sure neither of the paths result in the death of Brian
+		// and if they do, make them the max value so the other will be smaller
+		if (bottom < 1)
+			bottom = numeric_limits<int>::max();
+		if (right < 1)
+			right = numeric_limits<int>::max();
+
+		// Return the minimum of the two values for the optimal path
 		// calling index x and y
-		return (curr + max(bottom, right));
+		return (curr + min(bottom, right));
 	}
 
 }
