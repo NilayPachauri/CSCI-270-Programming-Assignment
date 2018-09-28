@@ -16,10 +16,21 @@ using namespace std;
 //	You can add any custom classes / helper functions here.
 
 /*
- * x: the x-coordinate of your location in the vector
- * y: the y-coordinate of your location in the vector
+ * 	Purpose:
+ *		Recursively determine the minimum amount of life Brian needs to
+ *		paint his message
+ *
+ * 	Parameters:
+ * 		min:	the current minimum life value it took to get to G[x,y]
+ * 		x:	the x-coordinate of your location in the vector
+ * 		y:	the y-coordinate of your location in the vector
+ * 		N:	the number of rows/columns in G
+ * 		G:	the array containing the values of the grid
+ *
+ *	Returns:
+ *		The minimum life Brian needs in order to paint his message
  */
-int opt(int x, int y, int N, vector <vector <string> > G)	{
+int opt(int min, int x, int y, int N, vector <vector <string> > G)	{
 
 	// Let curr be the current value of the cell
 	int curr = stoi(G[x][y]);
@@ -66,7 +77,7 @@ int solve(int N, vector<vector<string> > G) {
 		G[N-1][N-1] is the bottom right corner
 	Return: the minimum life Brain needs to complete his task.
 */
-	return opt(0, 0, N, G);
+	return opt(1, 0, 0, N, G);
 }
 
 //	The main function reads the input and outputs your answer.
