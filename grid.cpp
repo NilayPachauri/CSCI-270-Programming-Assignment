@@ -42,7 +42,7 @@ int opt(int m, int x, int y, int N, vector <vector <string> > G)	{
 		if (m + curr < 1)
 			min_val = 1 - curr;
 
-		return min_val + m;
+		return min_val;
 	} else {
 
 		// Initialize the minimum value of Brian's health needed to traverse
@@ -53,14 +53,14 @@ int opt(int m, int x, int y, int N, vector <vector <string> > G)	{
 
 		// Update the minimum life necessary depending on the current cell
 		if (m + curr < 1)
-			min_val = 1 - curr;
+			min_val = 1 - (m + curr);
 
 		// Update bottom and the right based on the optimal value of their
 		// recursive subcalls
 		if (x != (N - 1))
-			bottom = min_val + opt(m + curr, x + 1, y, N, G);
+			bottom = min_val + opt(min_val + m + curr, x + 1, y, N, G);
 		if (y != (N - 1))
-			right = min_val + opt(m + curr, x, y + 1, N, G);
+			right = min_val + opt(min_val + m + curr, x, y + 1, N, G);
 
 		// Return the minimum life value betweeen the bottom and the right path
 		return min(bottom, right);
@@ -78,7 +78,8 @@ int solve(int N, vector<vector<string> > G) {
 		G[N-1][N-1] is the bottom right corner
 	Return: the minimum life Brain needs to complete his task.
 */
-	return opt(1, 0, 0, N, G);
+	int initial_min_life = 1;
+	return initial_min_life + opt(initial_min_life, 0, 0, N, G);
 }
 
 //	The main function reads the input and outputs your answer.
