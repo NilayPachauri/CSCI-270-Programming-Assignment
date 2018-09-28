@@ -21,7 +21,7 @@ using namespace std;
  *		paint his message
  *
  * 	Parameters:
- * 		min:	the current minimum life value it took to get to G[x,y]
+ * 		m:	the current minimum life value it took to get to G[x,y]
  * 		x:	the x-coordinate of your location in the vector
  * 		y:	the y-coordinate of your location in the vector
  * 		N:	the number of rows/columns in G
@@ -30,7 +30,7 @@ using namespace std;
  *	Returns:
  *		The minimum life Brian needs in order to paint his message
  */
-int opt(int min, int x, int y, int N, vector <vector <string> > G)	{
+int opt(int m, int x, int y, int N, vector <vector <string> > G)	{
 
 	// Let curr be the current value of the cell
 	int curr = stoi(G[x][y]);
@@ -38,31 +38,30 @@ int opt(int min, int x, int y, int N, vector <vector <string> > G)	{
 	// If we've reached the bottom right corner,
 	// simply output it's value
 	if ((x == (N - 1)) && (y == (N - 1))){
-		return curr;
+		if (m + curr < 1)
+			m += 1 - curr;
+
+		return m;
 	} else {
 
 		// Initialize the minimum value of Brian's health needed to traverse
 		// from G[x,y] to the end
-		int bottom = 0;
-		int right = 0;
+		int bottom = numeric_limits<int>::max();
+		int right = numeric_limits<int>::max();
 
-		// Update bottom and the right based on the value if they were picked
-		// summed with the optimal value of getting to the current index
+		// Update the minimum life necessary depending on the current cell
+		if (m + curr < 1)
+			m += 1 - curr;
+
+		// Update bottom and the right based on the optimal value of their
+		// recursive subcalls
 		if (x != (N - 1))
-			bottom = opt(x + 1, y, N, G);
+			bottom = opt(m, x + 1, y, N, G);
 		if (y != (N - 1))
-			right = opt(x, y + 1, N, G);
+			right = opt(m, x, y + 1, N, G);
 
-		// Check to make sure neither of the paths result in the death of Brian
-		// and if they do, make them the max value so the other will be smaller
-		if (bottom < 1)
-			bottom = numeric_limits<int>::max();
-		if (right < 1)
-			right = numeric_limits<int>::max();
-
-		// Return the minimum of the two values for the optimal path
-		// calling index x and y
-		return (curr + min(bottom, right));
+		// Return the minimum life value betweeen the bottom and the right path
+		return min(bottom, right);
 	}
 
 }
