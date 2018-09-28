@@ -38,27 +38,29 @@ int opt(int m, int x, int y, int N, vector <vector <string> > G)	{
 	// If we've reached the bottom right corner,
 	// simply output it's value
 	if ((x == (N - 1)) && (y == (N - 1))){
+		int min_val = 0;
 		if (m + curr < 1)
-			m += 1 - curr;
+			min_val = 1 - curr;
 
-		return m;
+		return min_val + m;
 	} else {
 
 		// Initialize the minimum value of Brian's health needed to traverse
 		// from G[x,y] to the end
 		int bottom = numeric_limits<int>::max();
 		int right = numeric_limits<int>::max();
+		int min_val = 0;
 
 		// Update the minimum life necessary depending on the current cell
 		if (m + curr < 1)
-			m += 1 - curr;
+			min_val = 1 - curr;
 
 		// Update bottom and the right based on the optimal value of their
 		// recursive subcalls
 		if (x != (N - 1))
-			bottom = opt(m, x + 1, y, N, G);
+			bottom = min_val + opt(m + curr, x + 1, y, N, G);
 		if (y != (N - 1))
-			right = opt(m, x, y + 1, N, G);
+			right = min_val + opt(m + curr, x, y + 1, N, G);
 
 		// Return the minimum life value betweeen the bottom and the right path
 		return min(bottom, right);
