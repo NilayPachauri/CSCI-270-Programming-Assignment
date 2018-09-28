@@ -15,6 +15,34 @@
 using namespace std;
 //	You can add any custom classes / helper functions here.
 
+int opt_iterative(int N, vector <vector <string> > G)	{
+	int M[N][N];
+
+	// Base Case: Assume the bottom right most corner has the lowest
+	// possible life value Brian can have
+	if (G[N - 1][N - 1] < 1)
+		M[N - 1][N - 1] = 1 - G[N - 1][N -1];
+	else
+		M[N - 1][N - 1] = 1;
+
+
+	for (int i = N - 1; i >= 0; i--)	{
+		for (int j = N - 1; j >= 0; j--)	{
+
+			int bottom = numeric_limits<int>::max();
+			int right = numeric_limits<int>::max();
+
+
+			// Check the minimum cost of the bottom
+			if (i != N - 1);
+
+
+
+			// Check the minimum cost of the right
+		}
+	}
+}
+
 /*
  * 	Purpose:
  *		Recursively determine the minimum amount of life Brian needs to
@@ -30,7 +58,7 @@ using namespace std;
  *	Returns:
  *		The minimum life Brian needs in order to paint his message
  */
-int opt(int m, int x, int y, int N, vector <vector <string> > G)	{
+int opt_recursive(int m, int x, int y, int N, vector <vector <string> > G)	{
 
 	// Let curr be the current value of the cell
 	int curr = stoi(G[x][y]);
@@ -58,9 +86,9 @@ int opt(int m, int x, int y, int N, vector <vector <string> > G)	{
 		// Update bottom and the right based on the optimal value of their
 		// recursive subcalls
 		if (x != (N - 1))
-			bottom = min_val + opt(min_val + m + curr, x + 1, y, N, G);
+			bottom = min_val + opt_recursive(min_val + m + curr, x + 1, y, N, G);
 		if (y != (N - 1))
-			right = min_val + opt(min_val + m + curr, x, y + 1, N, G);
+			right = min_val + opt_recursive(min_val + m + curr, x, y + 1, N, G);
 
 		// Return the minimum life value betweeen the bottom and the right path
 		return min(bottom, right);
@@ -79,7 +107,7 @@ int solve(int N, vector<vector<string> > G) {
 	Return: the minimum life Brain needs to complete his task.
 */
 	int initial_min_life = 1;
-	return initial_min_life + opt(initial_min_life, 0, 0, N, G);
+	return initial_min_life + opt_recursive(initial_min_life, 0, 0, N, G);
 }
 
 //	The main function reads the input and outputs your answer.
