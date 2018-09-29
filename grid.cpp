@@ -70,6 +70,8 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 			min_life = min(min_top, min_left);
 		}
 	}
+
+	return min_life;
 }
 
 /*
@@ -135,8 +137,13 @@ int solve(int N, vector<vector<string> > G) {
 		G[N-1][N-1] is the bottom right corner
 	Return: the minimum life Brain needs to complete his task.
 */
-	int initial_min_life = 1;
-	return initial_min_life + opt_recursive(initial_min_life, 0, 0, N, G);
+
+	// Recursive Solution
+	// int initial_min_life = 1;
+	// return initial_min_life + opt_recursive(initial_min_life, 0, 0, N, G);
+
+	// Iterative Solution
+	return opt_iterative(N, G);
 }
 
 //	The main function reads the input and outputs your answer.
