@@ -18,27 +18,56 @@ using namespace std;
 int opt_iterative(int N, vector <vector <string> > G)	{
 	int M[N][N];
 
-	// Base Case: Assume the bottom right most corner has the lowest
-	// possible life value Brian can have
-	if (G[N - 1][N - 1] < 1)
-		M[N - 1][N - 1] = 1 - G[N - 1][N -1];
-	else
-		M[N - 1][N - 1] = 1;
+	int min_life = 1;
 
+	for (int i = 0; i < N; i++)	{
+		for (int j = 0; j < N; j++)	{
 
-	for (int i = N - 1; i >= 0; i--)	{
-		for (int j = N - 1; j >= 0; j--)	{
+			int curr = stoi(G[i][j])
 
-			int bottom = numeric_limits<int>::max();
-			int right = numeric_limits<int>::max();
+			// Base Case: Set the Minimum Health at the Start as the
+			// maximum of 1 and 1 - current value 
+			if ((i == 0) && (j == 0)){
+				if (curr < 0)	{
+					M[i][j] = 1 - curr;
+					min_life -= curr;
+				} else	{
+					M[i][j] = 1 + curr;
+				}
+			}
 
+			// Store the theoretical values that you would get if you took
+			// the top or the left path to get to this square
+			int top = numeric_limits<int>::max();
+			int left = numeric_limits<int>::max();
 
-			// Check the minimum cost of the bottom
-			if (i != N - 1);
+			// Store the minimum life increase necessary to pass that tile
+			int min_top = 0;
+			int min_left = 0;
 
+			// Find the life value and the potential increase if coming from top
+			if (i != 0) {
+				if (curr + M[i - 1][j] < 0)	{
+					top = 1 - curr;
+					min_top = top - M[i - 1][j];
+				} else	{
+					top = 1 + curr;
+				}
+			}
 
+			// Find the life value and the potential increase if coming from left
+			if (j != 0)	{
+				if (curr + M[i][j - 1])	{
+					left = 1 - curr;
+					min_left = left - M[i][j - 1];
+				} else	{
+					left = 1 + curr;
+				}
+			}
 
-			// Check the minimum cost of the right
+			// Store the minimum life value and the minimum life increase
+			M[i][j] = min(top, left);
+			min_life = min(min_top, min_left);
 		}
 	}
 }
