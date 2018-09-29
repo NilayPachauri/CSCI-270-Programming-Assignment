@@ -23,7 +23,7 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 	for (int i = 0; i < N; i++)	{
 		for (int j = 0; j < N; j++)	{
 
-			int curr = stoi(G[i][j])
+			int curr = stoi(G[i][j]);
 
 			// Base Case: Set the Minimum Health at the Start as the
 			// maximum of 1 and 1 - current value 
