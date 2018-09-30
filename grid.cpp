@@ -86,7 +86,7 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 
 				// Store the minimum life value and the minimum life increase
 				M[i][j].value = min(top, left);
-				M[i][j].min_life += min_to_add;
+				M[i][j].min_life = min_to_add;
 			}
 		}
 	}
