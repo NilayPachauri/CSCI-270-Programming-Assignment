@@ -23,8 +23,6 @@ struct CELL {
 int opt_iterative(int N, vector <vector <string> > G)	{
 	CELL M[N][N];
 
-	int min_life = 1;
-
 	cout << endl;
 
 	for (int i = 0; i < N; i++)	{
@@ -85,8 +83,11 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 					min_to_add = min(min_top, min_left);
 
 				// Store the minimum life value and the minimum life increase
-				M[i][j].value = min(top, left);
 				M[i][j].min_life = min_to_add;
+				if (M[i][j].min_life == min_top)
+					M[i][j].value = top;
+				else
+					M[i][j].value = left;
 			}
 		}
 	}
@@ -105,7 +106,7 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 		cout << endl;
 	}
 
-	return min_life;
+	return M[N - 1][N - 1].min_life;
 }
 
 /*
