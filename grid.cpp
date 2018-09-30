@@ -15,8 +15,13 @@
 using namespace std;
 //	You can add any custom classes / helper functions here.
 
+struct CELL {
+	int value = numeric_limits<int>::max();
+	int min_life = 1;
+};
+
 int opt_iterative(int N, vector <vector <string> > G)	{
-	int M[N][N];
+	CELL M[N][N];
 
 	int min_life = 1;
 
@@ -31,10 +36,10 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 			// maximum of 1 and 1 - current value 
 			if ((i == 0) && (j == 0)){
 				if (curr < 0)	{
-					M[i][j] = 1 - curr;
-					min_life -= curr;
+					M[i][j].value = 1 - curr;
+					M[i][j].min_life -= curr;
 				} else	{
-					M[i][j] = 1 + curr;
+					M[i][j].value = 1 + curr;
 				}
 			} else 	{
 
@@ -49,11 +54,11 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 
 				// Find the life value and the potential increase if coming from top
 				if (i != 0) {
-					if ((curr + M[i - 1][j]) < 1)	{
+					if ((curr + M[i - 1][j].value) < 1)	{
 						top = 1 - curr;
-						min_top = top - M[i - 1][j];
+						min_top = top - M[i - 1][j].value;
 					} else	{
-						top = M[i - 1][j];
+						top = M[i - 1][j].value;
 					}
 
 					top += curr;
@@ -61,11 +66,11 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 
 				// Find the life value and the potential increase if coming from left
 				if (j != 0)	{
-					if ((curr + M[i][j - 1]) < 1)	{
+					if ((curr + M[i][j - 1].value) < 1)	{
 						left = 1 - curr;
-						min_left = left - M[i][j - 1];
+						min_left = left - M[i][j - 1].value;
 					} else	{
-						left = M[i][j - 1];
+						left = M[i][j - 1].value;
 					}
 
 					left += curr;
@@ -78,15 +83,21 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 					min_to_add = min(min_top, min_left);
 
 				// Store the minimum life value and the minimum life increase
-				M[i][j] = min(top, left);
-				min_life += min_to_add;
+				M[i][j].value = min(top, left);
+				M[i][j].min_life += min_to_add;
 			}
 		}
 	}
 
 	for (int i = 0; i < N; i++)	{
 		for (int j = 0; j < N; j++)
-			cout << M[i][j] << " ";
+			cout << M[i][j].value << " ";
+		cout << endl;
+	}
+
+	for (int i = 0; i < N; i++)	{
+		for (int j = 0; j < N; j++)
+			cout << M[i][j].min_life << " ";
 		cout << endl;
 	}
 
