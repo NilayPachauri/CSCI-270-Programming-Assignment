@@ -16,15 +16,14 @@ using namespace std;
 //	You can add any custom classes / helper functions here.
 
 struct CELL {
-	int value = numeric_limits<int>::max();
+	int value = 1;
 	int min_life = 1;
+	bool is_p = false;
+	bool is_d = false;
 };
 
 int opt_iterative(int N, vector <vector <string> > G)	{
 	CELL M[N][N];
-
-	bool is_p = false;
-	bool is_d = false;
 
 	cout << endl;
 
@@ -34,20 +33,11 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 			try {
 				int curr = stoi(G[i][j]);
 
-				if (is_p && (curr < 0))	{
-					curr = 0;
-					is_p = false;
-				} else if (is_d && (curr > 0))
-				{
-					curr *= 2;
-					is_d = false;
-				}
-
 				// Base Case: Set the Minimum Health at the Start as the
 				// maximum of 1 and 1 - current value 
 				if ((i == 0) && (j == 0)){
 					if (curr < 0)	{
-						M[i][j].value = 1 - curr;
+						M[i][j].value = 1;
 						M[i][j].min_life -= curr;
 					} else	{
 						M[i][j].value = 1 + curr;
@@ -63,8 +53,25 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 					int min_top = numeric_limits<int>::max();
 					int min_left = numeric_limits<int>::max();
 
+					// Initialize storage of using bonuses
+					int top_p = false;
+					int top_d = false;
+					int left_p = false;
+					int left_d = false;
+
 					// Find the life value and the potential increase if coming from top
 					if (i != 0) {
+
+						if (M[i - 1][j].is_p && (curr < 0))	{
+							curr = 0;
+							top_p = false;
+							top_d = M[i - 1][j].is_d;
+						} else if (M[i - 1][j].is_d && (curr > 0))	{
+							curr *= 2;
+							top_p = M[i - 1][j].is_p;
+							top_d = false;
+						}
+
 						if ((curr + M[i - 1][j].value) < 1)	{
 							top = 1 - curr;
 							min_top = (top - M[i - 1][j].value) + M[i - 1][j].min_life;
@@ -76,8 +83,22 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 						top += curr;
 					}
 
+					// Reset curr in case top has power up but left doesn't
+					curr = stoi(G[i][j]);
+
 					// Find the life value and the potential increase if coming from left
 					if (j != 0)	{
+
+						if (M[i][j - 1].is_p && (curr < 0))	{
+							curr = 0;
+							left_p = false;
+							left_d = M[i][j - 1].is_d;
+						} else if (M[i][j - 1].is_d && (curr > 0))	{
+							curr *= 2;
+							left_p = M[i][j - 1].is_p;
+							left_d = false;
+						}
+
 						if ((curr + M[i][j - 1].value) < 1)	{
 							left = 1 - curr;
 							min_left = (left - M[i][j - 1].value) + M[i][j - 1].min_life;
@@ -104,19 +125,36 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 				}
 			} catch (const std::invalid_argument& ia)	{
 
-				if (M[i - 1][j].min_life < M[i][j - 1].min_life){
+				if ((i != 0) && (j != 0))	{
+
+					if (M[i - 1][j].min_life < M[i][j - 1].min_life){
+
+						M[i][j].value = M[i - 1][j].value;
+						M[i][j].min_life = M[i - 1][j].min_life;
+					} else	{
+
+						M[i][j].value = M[i][j - 1].value;
+						M[i][j].min_life = M[i][j - 1].min_life;
+					}
+				} else if (i != 0)	{
+
 					M[i][j].value = M[i - 1][j].value;
 					M[i][j].min_life = M[i - 1][j].min_life;
+				} else if (j != 0)	{
+
+					M[i][j].value = M[i][j - 1].value;
+					M[i][j].min_life = M[i][j - 1].min_life;
 				} else	{
-					M[i][j].value = M[i - 1][j].value;
-					M[i][j].min_life = M[i - 1][j].min_life;
+
+					M[i][j].value = 1;
+					M[i][j].min_life = 1;
 				}
 
 				if (G[i][j].compare("P") == 0)
-					is_p = true;
+					M[i][j].is_p = true;
 
 				if (G[i][j].compare("D") == 0)
-					is_d = true;
+					M[i][j].is_d = true;
 			}
 		}
 	}
