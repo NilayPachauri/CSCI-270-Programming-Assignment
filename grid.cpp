@@ -53,8 +53,10 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 						top = 1 - curr;
 						min_top = top - M[i - 1][j];
 					} else	{
-						top = 1 + curr;
+						top = M[i - 1][j];
 					}
+
+					top += curr;
 				}
 
 				// Find the life value and the potential increase if coming from left
@@ -63,8 +65,10 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 						left = 1 - curr;
 						min_left = left - M[i][j - 1];
 					} else	{
-						left = 1 + curr;
+						left = M[i][j - 1];
 					}
+
+					left += curr;
 				}
 
 				// Determine what the minimum life necessary to get past this
