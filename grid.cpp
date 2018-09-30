@@ -20,6 +20,8 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 
 	int min_life = 1;
 
+	cout << endl;
+
 	for (int i = 0; i < N; i++)	{
 		for (int j = 0; j < N; j++)	{
 
@@ -34,41 +36,52 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 				} else	{
 					M[i][j] = 1 + curr;
 				}
-			}
+			} else 	{
 
-			// Store the theoretical values that you would get if you took
-			// the top or the left path to get to this square
-			int top = numeric_limits<int>::max();
-			int left = numeric_limits<int>::max();
+				// Store the theoretical values that you would get if you took
+				// the top or the left path to get to this square
+				int top = numeric_limits<int>::max();
+				int left = numeric_limits<int>::max();
 
-			// Store the minimum life increase necessary to pass that tile
-			int min_top = 0;
-			int min_left = 0;
+				// Store the minimum life increase necessary to pass that tile
+				int min_top = numeric_limits<int>::max();
+				int min_left = numeric_limits<int>::max();
 
-			// Find the life value and the potential increase if coming from top
-			if (i != 0) {
-				if (curr + M[i - 1][j] < 0)	{
-					top = 1 - curr;
-					min_top = top - M[i - 1][j];
-				} else	{
-					top = 1 + curr;
+				// Find the life value and the potential increase if coming from top
+				if (i != 0) {
+					if ((curr + M[i - 1][j]) < 0)	{
+						top = 1 - curr;
+						min_top = top - M[i - 1][j];
+					} else	{
+						top = 1 + curr;
+					}
 				}
-			}
 
-			// Find the life value and the potential increase if coming from left
-			if (j != 0)	{
-				if (curr + M[i][j - 1])	{
-					left = 1 - curr;
-					min_left = left - M[i][j - 1];
-				} else	{
-					left = 1 + curr;
+				// Find the life value and the potential increase if coming from left
+				if (j != 0)	{
+					if ((curr + M[i][j - 1]) < 0)	{
+						left = 1 - curr;
+						min_left = left - M[i][j - 1];
+					} else	{
+						left = 1 + curr;
+					}
 				}
-			}
 
-			// Store the minimum life value and the minimum life increase
-			M[i][j] = min(top, left);
-			min_life = min(min_top, min_left);
+				int min_to_add = 0;
+				if (min(min_top, min_left) != numeric_limits<int>::max())
+					min_to_add = min(min_top, min_left);
+
+				// Store the minimum life value and the minimum life increase
+				M[i][j] = min(top, left);
+				min_life += min_to_add;
+			}
 		}
+	}
+
+	for (int i = 0; i < N; i++)	{
+		for (int j = 0; j < N; j++)
+			cout << M[i][j] << " ";
+		cout << endl;
 	}
 
 	return min_life;
