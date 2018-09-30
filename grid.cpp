@@ -49,7 +49,7 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 
 				// Find the life value and the potential increase if coming from top
 				if (i != 0) {
-					if ((curr + M[i - 1][j]) < 0)	{
+					if ((curr + M[i - 1][j]) < 1)	{
 						top = 1 - curr;
 						min_top = top - M[i - 1][j];
 					} else	{
@@ -59,7 +59,7 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 
 				// Find the life value and the potential increase if coming from left
 				if (j != 0)	{
-					if ((curr + M[i][j - 1]) < 0)	{
+					if ((curr + M[i][j - 1]) < 1)	{
 						left = 1 - curr;
 						min_left = left - M[i][j - 1];
 					} else	{
@@ -67,6 +67,8 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 					}
 				}
 
+				// Determine what the minimum life necessary to get past this
+				// point and if an increase is necessary
 				int min_to_add = 0;
 				if (min(min_top, min_left) != numeric_limits<int>::max())
 					min_to_add = min(min_top, min_left);
