@@ -56,9 +56,10 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 				if (i != 0) {
 					if ((curr + M[i - 1][j].value) < 1)	{
 						top = 1 - curr;
-						min_top = top - M[i - 1][j].value;
+						min_top = (top - M[i - 1][j].value) + M[i - 1][j].min_life;
 					} else	{
 						top = M[i - 1][j].value;
+						min_top = M[i - 1][j].min_life;
 					}
 
 					top += curr;
@@ -68,9 +69,10 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 				if (j != 0)	{
 					if ((curr + M[i][j - 1].value) < 1)	{
 						left = 1 - curr;
-						min_left = left - M[i][j - 1].value;
+						min_left = (left - M[i][j - 1].value) + M[i][j - 1].min_life;
 					} else	{
 						left = M[i][j - 1].value;
+						min_left = M[i][j - 1].min_life;
 					}
 
 					left += curr;
@@ -94,6 +96,8 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 			cout << M[i][j].value << " ";
 		cout << endl;
 	}
+
+	cout << endl;
 
 	for (int i = 0; i < N; i++)	{
 		for (int j = 0; j < N; j++)
