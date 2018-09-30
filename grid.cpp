@@ -23,71 +23,100 @@ struct CELL {
 int opt_iterative(int N, vector <vector <string> > G)	{
 	CELL M[N][N];
 
+	bool is_p = false;
+	bool is_d = false;
+
 	cout << endl;
 
 	for (int i = 0; i < N; i++)	{
 		for (int j = 0; j < N; j++)	{
 
-			int curr = stoi(G[i][j]);
+			try {
+				int curr = stoi(G[i][j]);
 
-			// Base Case: Set the Minimum Health at the Start as the
-			// maximum of 1 and 1 - current value 
-			if ((i == 0) && (j == 0)){
-				if (curr < 0)	{
-					M[i][j].value = 1 - curr;
-					M[i][j].min_life -= curr;
+				if (is_p && (curr < 0))	{
+					curr = 0;
+					is_p = false;
+				} else if (is_d && (curr > 0))
+				{
+					curr *= 2;
+					is_d = false;
+				}
+
+				// Base Case: Set the Minimum Health at the Start as the
+				// maximum of 1 and 1 - current value 
+				if ((i == 0) && (j == 0)){
+					if (curr < 0)	{
+						M[i][j].value = 1 - curr;
+						M[i][j].min_life -= curr;
+					} else	{
+						M[i][j].value = 1 + curr;
+					}
+				} else 	{
+
+					// Store the theoretical values that you would get if you took
+					// the top or the left path to get to this square
+					int top = numeric_limits<int>::max();
+					int left = numeric_limits<int>::max();
+
+					// Store the minimum life increase necessary to pass that tile
+					int min_top = numeric_limits<int>::max();
+					int min_left = numeric_limits<int>::max();
+
+					// Find the life value and the potential increase if coming from top
+					if (i != 0) {
+						if ((curr + M[i - 1][j].value) < 1)	{
+							top = 1 - curr;
+							min_top = (top - M[i - 1][j].value) + M[i - 1][j].min_life;
+						} else	{
+							top = M[i - 1][j].value;
+							min_top = M[i - 1][j].min_life;
+						}
+
+						top += curr;
+					}
+
+					// Find the life value and the potential increase if coming from left
+					if (j != 0)	{
+						if ((curr + M[i][j - 1].value) < 1)	{
+							left = 1 - curr;
+							min_left = (left - M[i][j - 1].value) + M[i][j - 1].min_life;
+						} else	{
+							left = M[i][j - 1].value;
+							min_left = M[i][j - 1].min_life;
+						}
+
+						left += curr;
+					}
+
+					// Determine what the minimum life necessary to get past this
+					// point and if an increase is necessary
+					int min_to_add = 0;
+					if (min(min_top, min_left) != numeric_limits<int>::max())
+						min_to_add = min(min_top, min_left);
+
+					// Store the minimum life value and the minimum life increase
+					M[i][j].min_life = min_to_add;
+					if (M[i][j].min_life == min_top)
+						M[i][j].value = top;
+					else
+						M[i][j].value = left;
+				}
+			} catch (const std::invalid_argument& ia)	{
+
+				if (M[i - 1][j].min_life < M[i][j - 1].min_life){
+					M[i][j].value = M[i - 1][j].value;
+					M[i][j].min_life = M[i - 1][j].min_life;
 				} else	{
-					M[i][j].value = 1 + curr;
-				}
-			} else 	{
-
-				// Store the theoretical values that you would get if you took
-				// the top or the left path to get to this square
-				int top = numeric_limits<int>::max();
-				int left = numeric_limits<int>::max();
-
-				// Store the minimum life increase necessary to pass that tile
-				int min_top = numeric_limits<int>::max();
-				int min_left = numeric_limits<int>::max();
-
-				// Find the life value and the potential increase if coming from top
-				if (i != 0) {
-					if ((curr + M[i - 1][j].value) < 1)	{
-						top = 1 - curr;
-						min_top = (top - M[i - 1][j].value) + M[i - 1][j].min_life;
-					} else	{
-						top = M[i - 1][j].value;
-						min_top = M[i - 1][j].min_life;
-					}
-
-					top += curr;
+					M[i][j].value = M[i - 1][j].value;
+					M[i][j].min_life = M[i - 1][j].min_life;
 				}
 
-				// Find the life value and the potential increase if coming from left
-				if (j != 0)	{
-					if ((curr + M[i][j - 1].value) < 1)	{
-						left = 1 - curr;
-						min_left = (left - M[i][j - 1].value) + M[i][j - 1].min_life;
-					} else	{
-						left = M[i][j - 1].value;
-						min_left = M[i][j - 1].min_life;
-					}
+				if (G[i][j].compare("P") == 0)
+					is_p = true;
 
-					left += curr;
-				}
-
-				// Determine what the minimum life necessary to get past this
-				// point and if an increase is necessary
-				int min_to_add = 0;
-				if (min(min_top, min_left) != numeric_limits<int>::max())
-					min_to_add = min(min_top, min_left);
-
-				// Store the minimum life value and the minimum life increase
-				M[i][j].min_life = min_to_add;
-				if (M[i][j].min_life == min_top)
-					M[i][j].value = top;
-				else
-					M[i][j].value = left;
+				if (G[i][j].compare("D") == 0)
+					is_d = true;
 			}
 		}
 	}
