@@ -25,8 +25,6 @@ struct CELL {
 int opt_iterative(int N, vector <vector <string> > G)	{
 	CELL M[N][N];
 
-	cout << endl;
-
 	for (int i = 0; i < N; i++)	{
 		for (int j = 0; j < N; j++)	{
 
@@ -118,10 +116,12 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 
 					// Store the minimum life value and the minimum life increase
 					M[i][j].min_life = min_to_add;
-					if (M[i][j].min_life == min_top)
+					if (min_top < min_left)
 						M[i][j].value = top;
-					else
+					else if (min_top > min_left)
 						M[i][j].value = left;
+					else
+						M[i][j].value = max(top, left);
 				}
 			} catch (const std::invalid_argument& ia)	{
 
@@ -159,76 +159,8 @@ int opt_iterative(int N, vector <vector <string> > G)	{
 		}
 	}
 
-	for (int i = 0; i < N; i++)	{
-		for (int j = 0; j < N; j++)
-			cout << M[i][j].value << " ";
-		cout << endl;
-	}
-
-	cout << endl;
-
-	for (int i = 0; i < N; i++)	{
-		for (int j = 0; j < N; j++)
-			cout << M[i][j].min_life << " ";
-		cout << endl;
-	}
-
 	return M[N - 1][N - 1].min_life;
 }
-
-/*
- * 	Purpose:
- *		Recursively determine the minimum amount of life Brian needs to
- *		paint his message
- *
- * 	Parameters:
- * 		m:	the current minimum life value it took to get to G[x,y]
- * 		x:	the x-coordinate of your location in the vector
- * 		y:	the y-coordinate of your location in the vector
- * 		N:	the number of rows/columns in G
- * 		G:	the array containing the values of the grid
- *
- *	Returns:
- *		The minimum life Brian needs in order to paint his message
- */
-int opt_recursive(int m, int x, int y, int N, vector <vector <string> > G)	{
-
-	// Let curr be the current value of the cell
-	int curr = stoi(G[x][y]);
-
-	// If we've reached the bottom right corner,
-	// simply output it's value
-	if ((x == (N - 1)) && (y == (N - 1))){
-		int min_val = 0;
-		if (m + curr < 1)
-			min_val = 1 - curr;
-
-		return min_val;
-	} else {
-
-		// Initialize the minimum value of Brian's health needed to traverse
-		// from G[x,y] to the end
-		int bottom = numeric_limits<int>::max();
-		int right = numeric_limits<int>::max();
-		int min_val = 0;
-
-		// Update the minimum life necessary depending on the current cell
-		if (m + curr < 1)
-			min_val = 1 - (m + curr);
-
-		// Update bottom and the right based on the optimal value of their
-		// recursive subcalls
-		if (x != (N - 1))
-			bottom = min_val + opt_recursive(min_val + m + curr, x + 1, y, N, G);
-		if (y != (N - 1))
-			right = min_val + opt_recursive(min_val + m + curr, x, y + 1, N, G);
-
-		// Return the minimum life value betweeen the bottom and the right path
-		return min(bottom, right);
-	}
-
-}
-
 
 int solve(int N, vector<vector<string> > G) {
 /*
@@ -239,10 +171,6 @@ int solve(int N, vector<vector<string> > G) {
 		G[N-1][N-1] is the bottom right corner
 	Return: the minimum life Brain needs to complete his task.
 */
-
-	// Recursive Solution
-	// int initial_min_life = 1;
-	// return initial_min_life + opt_recursive(initial_min_life, 0, 0, N, G);
 
 	// Iterative Solution
 	return opt_iterative(N, G);
